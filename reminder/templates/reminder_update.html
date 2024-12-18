@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Tahrirlash</h1>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Saqlash</button>
+    <a href="{% url 'reminder_list' %}" class="btn btn-secondary">Bekor qilish</a>
+</form>
+{% endblock %}

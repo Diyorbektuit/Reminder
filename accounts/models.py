@@ -17,5 +17,7 @@ class TelegramUser(models.Model):
     username = models.CharField(max_length=150, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='telegram')
 
+    objects = models.Manager()
+
     def __str__(self):
         return self.username or str(self.telegram_id)
