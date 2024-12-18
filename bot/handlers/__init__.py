@@ -5,12 +5,22 @@ from .add import start_add_reminder, get_title, get_text, get_date
 from .list import list_reminders
 from .login import login_username, login_password, cancel, logout, check_credentials
 from .done import done_reminders, done_reminders_2
+from .delete import delete_reminder_handler, delete_reminder_handler_2
 
 
 reminder_done_handler = ConversationHandler(
     entry_points=[CommandHandler('done', done_reminders)],
     states={
         0: [MessageHandler(filters.TEXT & ~filters.COMMAND, done_reminders_2)]
+    },
+    fallbacks = [],
+)
+
+
+reminder_delete_handler = ConversationHandler(
+    entry_points=[CommandHandler('delete', delete_reminder_handler)],
+    states={
+        0: [MessageHandler(filters.TEXT & ~filters.COMMAND, delete_reminder_handler_2)]
     },
     fallbacks = [],
 )

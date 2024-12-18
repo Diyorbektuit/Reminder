@@ -7,7 +7,7 @@ django.setup()
 from telegram.ext import Application, CommandHandler
 import environ
 from handlers import add_reminder_conv, conversation_handler, start, \
-    list_reminders, logout, cancel, reminder_done_handler
+    list_reminders, logout, cancel, reminder_done_handler, reminder_delete_handler
 
 env = environ.Env()
 env.read_env(".env")
@@ -26,6 +26,7 @@ def main():
     application.add_handler(add_reminder_conv)
     application.add_handler(conversation_handler)
     application.add_handler(reminder_done_handler)
+    application.add_handler(reminder_delete_handler)
     application.run_polling()
 
 if __name__ == "__main__":

@@ -1,11 +1,11 @@
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, ConversationHandler
 from bot.state_storage import BotStateStorage
 from bot.functions import done_reminder
 
 state_storage = BotStateStorage()
 
-REMINDER_ID = range(1)
+REMINDER_ID = 0
 
 
 async def done_reminders(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -18,9 +18,12 @@ async def done_reminders(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def done_reminders_2(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reminder_id = update.message.text
-    result = await done_reminder(reminder_id=reminder_id)
+    user_id = update.message.from_user.id
+    result = await done_reminder(reminder_id=reminder_id, user_id=str(user_id))
     if result:
-        return await update.message.reply_text("eslatma muvaffaqiyatli bajarilgan qilindi")
-    return await update.message.reply_text("elsatma idsi xato")
+        await update.message.reply_text("eslatma muvaffaqiyatli bajarilgan qilindi")
+        return ConversationHandler.END
+    await update.message.reply_text("elsatma idsi xato")
+    return ConversationHandler.END
 
 

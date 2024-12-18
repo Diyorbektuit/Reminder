@@ -45,6 +45,7 @@ def get_reminders(telegram_id):
         for count, reminder in enumerate(result, 1):
             response += (
                 f"**{count}. {reminder.text}**\n"
+                f"ID: {reminder.id} \n"
                 f"📋 Status: `{get_reminder_status(reminder.status)}`\n"
                 f"📅 Sana: `{reminder.date.strftime('%d-%m-%Y %H:%M')}`\n\n"
             )
@@ -76,16 +77,18 @@ def add_reminder(telegram_id: str, title: str, text: str, date: datetime):
 
 
 @sync_to_async()
-def delete_reminder(reminder_id: int):
+def delete_reminder(reminder_id: int, user_id: str):
+    user = TelegramUser.objects.get(telegram_id=user_id).user
     try:
-        reminder = Reminder.objects.get(id=reminder_id).delete()
+        reminder = user.reminders.get(id=reminder_id)
+        reminder.delete()
         return True
     except:
         return False
 
 
 @sync_to_async()
-def done_reminder(reminder_id: int, user_id: int):
+def done_reminder(reminder_id: int, user_id: str):
     user = TelegramUser.objects.get(telegram_id=user_id).user
     try:
         reminder = user.reminders.get(id=reminder_id)
