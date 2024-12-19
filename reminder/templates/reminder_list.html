@@ -15,6 +15,13 @@
     </a>
 </div>
 
+<!-- Yangi Eslatma Qo'shish Tugmasi -->
+<div class="mb-4 text-center">
+    <a href="{% url 'reminder_create' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Yangi Eslatma Qo'shish
+    </a>
+</div>
+
 <!-- Eslatmalar Listi -->
 <div class="row">
     {% for reminder in page_obj %}
@@ -51,7 +58,7 @@
     {% empty %}
         <div class="col-12 text-center">
             <div class="alert alert-info" role="alert">
-                Eslatma mavjud emas. <a href="{% url 'reminder_create' %}" class="alert-link">Yangi eslatma yarating</a>.
+                Eslatma mavjud emas.
             </div>
         </div>
     {% endfor %}
