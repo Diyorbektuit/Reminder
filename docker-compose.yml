@@ -4,11 +4,11 @@ services:
   # Django ilovasi
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8004
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8004:8004"
     depends_on:
       - redis
       - db
