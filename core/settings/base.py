@@ -103,9 +103,8 @@ DATABASES = {
 
 
 # celery
-
-CELERY_BROKER_URL = 'redis://musait_task-redis-1:6379/0'
-CELERY_RESULT_BACKEND = 'redis://musait_task-redis:6379/0'
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND')
 CELERY_TIMEZONE = "Asia/Tashkent"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
