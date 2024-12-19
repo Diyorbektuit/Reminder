@@ -1,18 +1,16 @@
 import os
 import django
+from django.conf import settings
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings.develop')
 django.setup()
 
 from telegram.ext import Application, CommandHandler
-import environ
 from handlers import add_reminder_conv, conversation_handler, start, \
     list_reminders, logout, cancel, reminder_done_handler, reminder_delete_handler
 
-env = environ.Env()
-env.read_env(".env")
 
-BOT_TOKEN = env.str("BOT_TOKEN")
+BOT_TOKEN = settings.BOT_TOKEN
 application = Application.builder().token(BOT_TOKEN).build()
 
 def main():

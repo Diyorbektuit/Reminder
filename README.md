@@ -1,6 +1,6 @@
-# _**Musait Task Management System**_
+# _**Reminder Task Management System**_
 
-Musait — bu vazifalarni boshqarish tizimi bo‘lib, u Redis, Celery va Docker-dan foydalangan holda 
+Reminder — bu vazifalarni boshqarish tizimi bo‘lib, u Redis, Celery va Docker-dan foydalangan holda 
 zamonaviy mikroxizmat arxitekturasini qo‘llab-quvvatlaydi.
 
 ## **📦 Loyiha tarkibi**
@@ -13,6 +13,8 @@ Loyiha quyidagi asosiy texnologiyalar va komponentlardan foydalanadi:
 - Celery: Asinxron fon vazifalarini boshqarish uchun.
 - Docker: Muhitni izolyatsiya qilish va xizmatlarni boshqarish uchun.
 - PostgreSQL: Ma'lumotlar bazasi uchun.
+- python-telegram-bot: telegram bot uchun 
+- SqlAlchemy: Telegram bot state management uchun
 
 ## **🚀 O'rnatish va ishga tushirish**
 
@@ -62,8 +64,7 @@ Loyiha .env faylidan foydalanadi. Quyida .env.example faylidan foydalanib o'z .e
 
 ## **⚙️ Texnologik stack**
 
-- Backend: Django, Celery, Redis
-- Ma'lumotlar bazasi: PostgreSQL
+- Backend: Django, Celery, Redis, SqlAlchemy
+- Ma'lumotlar bazasi: PostgreSQL, sqlite
 - Muhit boshqaruvi: Docker va Docker Compose
 
-## **📂 Loyihaning tuzilishi**
