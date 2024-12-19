@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes, ConversationHandler
-from bot.functions import authenticate_user, telegram_user_create, delete_telegram_user
+from bot.functions import authenticate_user, telegram_user_create, delete_telegram_user, is_telegram_id
 from bot.state_storage import BotStateStorage
 
 state_storage = BotStateStorage()
@@ -27,6 +27,9 @@ async def check_credentials(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = await authenticate_user(username=username, password=password)
 
     if user is not None:
+        if await is_telegram_id(telegram_id=update.message.from_user.id):
+            await update.message.reply_text("Bu foydalanuvchi mavjud")
+            return ConversationHandler.END
         state_storage.set_state(user_id=update.message.from_user.id, state="logged_in")
         await telegram_user_create(
             user=user, telegram_id=update.message.from_user.id, username=tg_username

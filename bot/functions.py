@@ -65,6 +65,15 @@ def delete_telegram_user(telegram_id):
 
 
 @sync_to_async()
+def is_telegram_id(telegram_id):
+    try:
+        TelegramUser.objects.get(telegram_id=telegram_id)
+        return True
+    except:
+        return False
+
+
+@sync_to_async()
 def add_reminder(telegram_id: str, title: str, text: str, date: datetime):
     user = TelegramUser.objects.get(telegram_id=telegram_id).user
     new_reminder = Reminder.objects.create(
