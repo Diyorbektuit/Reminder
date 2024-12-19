@@ -1,11 +1,8 @@
-version: '3.8'
-
 services:
-  # Django ilovasi
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+    container_name: "web-task"
     command: python manage.py runserver 0.0.0.0:8004
     volumes:
       - .:/app
@@ -14,63 +11,79 @@ services:
     depends_on:
       - redis
       - db
-    networks:
-      - app_network2
+    restart: always
 
-  # telegram bot
+
   bot:
-    build: .
-    command: python bot/main.py
+    build:
+      context: .
+    container_name: "bot-task"
+    command: python main.py
+    depends_on:
+      - db
+      - redis
     volumes:
       - .:/app
+    restart: always
+    env_file:
+      - .env
 
-  # Celery worker
   celery:
     build: .
-    command: celery -A core worker --loglevel=info
+    container_name: "celery-task"
+    command: ["celery", "-A", "core", "worker", "--loglevel=info"]
     volumes:
       - .:/app
     depends_on:
-      - redis
-    networks:
-      - app_network2
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
-  # Celery beat
   celerybeat:
     build: .
-    command: celery -A core beat --loglevel=info
+    container_name: "celerybeat-task"
+    command: ["/app/wait-for-it.sh", "db:5432", "--", "celery", "-A", "core", "beat", "--loglevel=info"]
     volumes:
       - .:/app
     depends_on:
-      - redis
-    networks:
-      - app_network2
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
-  # Redis (broker)
   redis:
     image: "redis:latest"
+    container_name: "redis-task"
     ports:
       - "6379:6379"
-    networks:
-      - app_network2
     healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
+      test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       retries: 3
 
-  # Database
   db:
-    image: postgres:latest
+    image: postgres
+    container_name: "postgres-db-task"
     environment:
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
-      - "5435:5432"
+      - "5432:5432"
     env_file:
       - .env
-    networks:
-      - app_network2
 
-networks:
-  app_network2:
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${DB_USER} -d $${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+volumes:
+  db_data:
+  static:
+  media:
