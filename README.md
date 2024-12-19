@@ -26,7 +26,7 @@ Loyiha uchun talab qilinadigan barcha paketlarni o'rnatish uchun virtual muhit y
 ```bash
 python -m venv .venv
 source .venv/bin/activate   # Windows uchun: .venv\Scripts\activate
-pip install -r requirements.txt
+pip install -r requirements/develop.txt.txt
 ```
 
 ### **2. Docker Compose-ni ishga tushirish**
