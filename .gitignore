@@ -378,3 +378,5 @@ Temporary Items
 *.icloud
 
 celerybeat-schedule.db
+
+docker-compose.yml
