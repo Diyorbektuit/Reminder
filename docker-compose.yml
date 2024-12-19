@@ -15,6 +15,13 @@ services:
     networks:
       - app_network2
 
+  # telegram bot
+  bot:
+    build: .
+    command: python bot/main.py
+    volumes:
+      - .:/app
+
   # Celery worker
   celery:
     build: .
