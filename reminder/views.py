@@ -4,7 +4,7 @@ from .models import Reminder
 from django.core.paginator import Paginator
 from .forms import ReminderPostForm, ReminderPatchForm
 
-
+@login_required
 def reminder_list(request):
     status_filter = request.GET.get('status')
     user = request.user
