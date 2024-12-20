@@ -1,20 +1,20 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from .models import Reminder
+from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from .forms import ReminderPostForm, ReminderPatchForm
 
-@login_required
+
 def reminder_list(request):
     status_filter = request.GET.get('status')
     user = request.user
+    if user.is_anonymous():
+        return redirect('login')
 
     if status_filter == 'done':
-        reminders = Reminder.objects.filter(status=True, user=user).order_by('-date')
+        reminders = user.reminders.filter(status=True).order_by('-date')
     elif status_filter == 'not_done':
-        reminders = Reminder.objects.filter(status=False, user=user).order_by('-date')
+        reminders = user.reminders.filter(status=False).order_by('-date')
     else:
-        reminders = Reminder.objects.filter(user=user).order_by('-date')
+        reminders = user.reminders.all().order_by('-date')
 
     paginator = Paginator(reminders, 6)
     page_number = request.GET.get('page')
@@ -26,8 +26,10 @@ def reminder_list(request):
     })
 
 
-@login_required
 def reminder_create(request):
+    user = request.user
+    if user.is_anonymous():
+        return redirect('login')
     if request.method == 'POST':
         form = ReminderPostForm(request.POST)
         if form.is_valid():
@@ -40,17 +42,27 @@ def reminder_create(request):
     return render(request, 'reminder_form.html', {'form': form})
 
 
-@login_required()
 def reminder_mark_done(request, pk):
-    reminder = get_object_or_404(Reminder, pk=pk)
+    user = request.user
+    if user.is_anonymous():
+        return redirect('login')
+    reminder = user.reminders.filter(id=pk)
+    if not reminder.exists():
+        return render(request, '404.html')
+    reminder = reminder.first()
     reminder.status = True
     reminder.save()
     return redirect('reminder_list')
 
 
-@login_required
 def reminder_update(request, pk):
-    reminder = get_object_or_404(Reminder, pk=pk, user=request.user)
+    user = request.user
+    if user.is_anonymous():
+        return redirect('login')
+    reminder = user.reminders.filter(id=pk)
+    if not reminder.exists():
+        return render(request, '404.html')
+    reminder = reminder.first()
     if request.method == 'POST':
         form = ReminderPatchForm(request.POST, instance=reminder)
         if form.is_valid():
@@ -61,9 +73,14 @@ def reminder_update(request, pk):
     return render(request, 'reminder_form.html', {'form': form})
 
 
-@login_required
 def reminder_delete(request, pk):
-    reminder = get_object_or_404(Reminder, pk=pk, user=request.user)
+    user = request.user
+    if user.is_anonymous:
+        return redirect('login')
+    reminder = user.reminders.filter(id=pk)
+    if not reminder.exists():
+        return render(request, '404.html')
+    reminder = reminder.first()
     if request.method == 'POST':
         reminder.delete()
         return redirect('reminder_list')
