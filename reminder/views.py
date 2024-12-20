@@ -6,9 +6,8 @@ from .forms import ReminderPostForm, ReminderPatchForm
 def reminder_list(request):
     status_filter = request.GET.get('status')
     user = request.user
-    if user.is_anonymous():
+    if user.is_anonymous:
         return redirect('login')
-
     if status_filter == 'done':
         reminders = user.reminders.filter(status=True).order_by('-date')
     elif status_filter == 'not_done':
@@ -28,7 +27,7 @@ def reminder_list(request):
 
 def reminder_create(request):
     user = request.user
-    if user.is_anonymous():
+    if user.is_anonymous:
         return redirect('login')
     if request.method == 'POST':
         form = ReminderPostForm(request.POST)
@@ -44,7 +43,7 @@ def reminder_create(request):
 
 def reminder_mark_done(request, pk):
     user = request.user
-    if user.is_anonymous():
+    if user.is_anonymous:
         return redirect('login')
     reminder = user.reminders.filter(id=pk)
     if not reminder.exists():
@@ -57,7 +56,7 @@ def reminder_mark_done(request, pk):
 
 def reminder_update(request, pk):
     user = request.user
-    if user.is_anonymous():
+    if user.is_anonymous:
         return redirect('login')
     reminder = user.reminders.filter(id=pk)
     if not reminder.exists():
