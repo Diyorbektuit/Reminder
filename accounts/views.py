@@ -5,6 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 
 def register(request):
+    user = request.user
+    if not user.is_anonymous:
+        return redirect('reminder_list')
     if request.method == 'POST':
         form = UserRegistrationForm(request.POST)
         if form.is_valid():
@@ -20,6 +23,9 @@ def register(request):
 
 
 def user_login(request):
+    user = request.user
+    if not user.is_anonymous:
+        return redirect('reminder_list')
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
